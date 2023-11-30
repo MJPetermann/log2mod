@@ -19,7 +19,7 @@ const events = [
     {
         name: "playerCommand",
         regex: /"(.+)<(\d+)><([\[\]\w:]+)><(TERRORIST|CT)>" say(_team)? "(?:[!.\/])(.*)"/,
-        data: ["", "name", "playerId", "steamId3", "side", "chatType", "text"],
+        data: ["", "name", "playerId", "steamId3", "side", "chatType", "command", "arguments"],
         format: function (match) {
             return {
                 player: {
@@ -30,7 +30,7 @@ const events = [
                 },
                 isTeamChat: (match[5] == "_team"),
                 command: match[6].split(" ")[0],
-                arguments: match[6].split(" ")
+                arguments: match[6].split(" ").slice(1)
             }
         }
     }

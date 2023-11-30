@@ -3,9 +3,10 @@ import { readdirSync } from 'node:fs';
 const pluginFiles = readdirSync("./plugins").filter(file => file.endsWith('.js'));
 
 async function loadPlugins(server){
+    server.pluginlist = []
     for (const file of pluginFiles) {
         const plugin = (await import("../plugins/" + file)).default
-        if (!server.plugins || (server.plugins.includes(plugin.name))) continue
+        if (server.plugins && (server.plugins.includes(plugin.name))) continue
         loadPlugin(server, plugin)
     }
 }

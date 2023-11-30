@@ -1,5 +1,5 @@
 import event from "events"
-import { checkServer } from "./rcon.js"
+import { loadRcon } from "./rcon.js"
 import { loadPlugins } from "./pluginManager.js"
 
 const serverManagers = []
@@ -14,18 +14,14 @@ class ServerManager extends event.EventEmitter{
         this.commands = []
     }
     async init(){
-        if(this.config.test) {
-            this.publicIp = this.config.publicIp
-        }else{
-            await this.loadPublicIp()
-        }
-        
+        await loadRcon(this)
+        await this.loadPublicIp()
         await loadPlugins(this)
 
     }
     async loadPublicIp () {
         const publicIpRegex = /udp\/ip\s*:\s*\d+\.\d+\.\d+\.\d+:\d+\s*\(public\s+(\d+\.\d+\.\d+\.\d+):\d+\)/
-        const checked = await checkServer(this)
+        const checked = await this.statusRcon()
         if(!checked) {
             this.active = false
             console.log("SERVER: " + this.name + " is not reachable")

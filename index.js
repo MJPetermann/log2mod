@@ -25,15 +25,14 @@ app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`);
 });
 
-async function eventLog(serverip, logs)
-    {
-        const server = servers.filter((server)=> (server.publicIp +":"+ server.port) == serverip)[0]
-        if(!server){
-            console.log(serverip + " not a server")
-            return
-        }
-        for (const line of logs.split('\n')) {
-            if (!line) return
-            matchEvent(server, line.slice(28));
-        }
+async function eventLog(serverip, logs) {
+    const server = servers.filter((server) => (server.publicIp + ":" + server.port) == serverip)[0]
+    if (!server) {
+        console.log(serverip + " not a server")
+        return
     }
+    for (const line of logs.split('\n')) {
+        if (!line) return
+        matchEvent(server, line.slice(28));
+    }
+}

@@ -8,7 +8,6 @@ async function matchEvent(server, line){
 
         const data = event.format(match)
         console.log(event.name + " on " + server.name)
-
         server.emit(event.name, data)
     }
 }
