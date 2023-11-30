@@ -1,5 +1,5 @@
 {
     "servers": [
-        {"name": "localserver", "ip": "192.168.178.38", "port": "27015", "rconPassword": "hallo123", "config":{}}
+        {"name": "localserver", "ip": "192.168.178.38", "port": "27015", "rconPassword": "hallo123", "config":{"test": true, "publicIp": "172.0.0.1"}}
     ]
 }
