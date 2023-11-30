@@ -1,6 +1,7 @@
 import event from "events"
-import { loadRcon } from "./rcon.js"
+import { loadRcon } from "./features/rcon.js"
 import { loadPlugins } from "./pluginManager.js"
+import { initCommands } from "./features/commandManager.js"
 
 const serverManagers = []
 class ServerManager extends event.EventEmitter{
@@ -11,11 +12,11 @@ class ServerManager extends event.EventEmitter{
         this.port = data.port || 27015
         this.rconPassword = data.rconPassword || ""
         this.config = data.config || {}
-        this.commands = []
     }
     async init(){
         await loadRcon(this)
         await this.loadPublicIp()
+        await initCommands(this)
         await loadPlugins(this)
 
     }
