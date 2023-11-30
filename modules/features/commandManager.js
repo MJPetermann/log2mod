@@ -8,5 +8,5 @@ class CommandManager extends event.EventEmitter{
 }
 export async function initCommands(server) {
     server.command = new CommandManager()
-    server.on("playerCommand",(data) => server.command.emit(data.command, data.arguments, data.player))
+    server.on("playerCommand",(data) => server.command.emit(data.command, data))
 }

@@ -2,6 +2,7 @@ import event from "events"
 import { loadRcon } from "./features/rcon.js"
 import { loadPlugins } from "./pluginManager.js"
 import { initCommands } from "./features/commandManager.js"
+import { initPlayerlist } from "./features/playerlist.js"
 
 const serverManagers = []
 class ServerManager extends event.EventEmitter{
@@ -18,6 +19,7 @@ class ServerManager extends event.EventEmitter{
         await this.loadPublicIp()
         await initCommands(this)
         await loadPlugins(this)
+        await initPlayerlist(this)
 
     }
     async loadPublicIp () {
