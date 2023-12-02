@@ -1,6 +1,6 @@
 {
   "name": "log2mod",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "JS Plugins for CS2",
   "main": "index.js",
   "type": "module",

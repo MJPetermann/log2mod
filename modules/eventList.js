@@ -1,7 +1,7 @@
 const events = [
     {
         name: "playerSay",
-        regex: /"(.+)<(\d+)><([\[\]\w:]+)><(TERRORIST|CT)>" say(_team)? "(.*)"/,
+        regex: /"(.+)<(\d+)><\[([\[\]\w:]+)\]><(TERRORIST|CT)>" say(_team)? "(.*)"/,
         data: ["", "name", "playerId", "steamId3", "side", "chatType", "text"],
         format: function (match) {
             return {
@@ -18,7 +18,7 @@ const events = [
     },
     {
         name: "playerCommand",
-        regex: /"(.+)<(\d+)><([\[\]\w:]+)><(TERRORIST|CT)>" say(_team)? "(?:[!.\/])(.*)"/,
+        regex: /"(.+)<(\d+)><\[([\[\]\w:]+)\]><(TERRORIST|CT)>" say(_team)? "(?:[!.\/])(.*)"/,
         data: ["", "name", "playerId", "steamId3", "side", "chatType", "command", "arguments"],
         format: function (match) {
             return {
@@ -36,7 +36,7 @@ const events = [
     },
     {
         name: "playerDisconnect",
-        regex: /"(.+)<(\d+)><([\[\]\w:]+)><(TERRORIST|CT|Unassigned|)>" disconnected \(reason "(.+)"\)/,
+        regex: /"(.+)<(\d+)><\[([\[\]\w:]+)\]><(TERRORIST|CT|Unassigned|)>" disconnected \(reason "(.+)"\)/,
         data: ["", "name", "playerId", "steamId3", "side", "reason"],
         format: function (match) {
             return {
@@ -52,7 +52,7 @@ const events = [
     },
     {
         name: "playerSwitch",
-        regex: /"(.+)<(\d+)><([\[\]\w:]+)>" switched from team <(Unassigned|Spectator|TERRORIST|CT)> to <(Unassigned|Spectator|TERRORIST|CT)>/,
+        regex: /"(.+)<(\d+)><\[([\[\]\w:]+)\]>" switched from team <(Unassigned|Spectator|TERRORIST|CT)> to <(Unassigned|Spectator|TERRORIST|CT)>/,
         data: ["", "name", "playerId", "steamId3", "oldSide", "newSide"],
         format: function (match) {
             return {
@@ -63,6 +63,22 @@ const events = [
                     side: match[5]
                 },
                 oldSide: match[4]
+            }
+        }
+    },
+    {
+        name: "playerPickedUp",
+        regex: /"(.+)<(\d+)><\[([\[\]\w:]+)\]><(TERRORIST|CT)>" picked up "(\w+)"/,
+        data: ["", "name", "playerId", "steamId3", "side", "weapon"],
+        format: function (match) {
+            return {
+                player: {
+                    name: match[1],
+                    playerId: match[2],
+                    steamId3:  match[3],
+                    side: match[4]
+                },
+                weapon: match[5]
             }
         }
     }

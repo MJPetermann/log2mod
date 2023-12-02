@@ -14,7 +14,7 @@ async function loadPlugins(server){
 async function loadPlugin (server, plugin) {
     await plugin.init(server)
     server.plugins.push({"name": plugin.name, "commands": plugin.commands, "description": plugin.description, "author": plugin.author})
-    server.command.list.push(plugin.commands)
+    server.command.list.push(...plugin.commands)
 }
 
 export {loadPlugins, loadPlugin}
