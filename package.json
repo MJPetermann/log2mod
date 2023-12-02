@@ -2,18 +2,18 @@
   "name": "log2mod",
   "version": "1.0.0",
   "description": "JS Plugins for CS2",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index"
+    "dev": "nodemon server"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MJPetermann/log2mod.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "MJPetermann",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/MJPetermann/log2mod/issues"
   },
