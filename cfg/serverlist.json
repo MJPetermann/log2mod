@@ -20,7 +20,8 @@
             "rconPassword": "hallo123",
             "config": {
                 "plugins": [
-                    "simpleCommands"
+                    "simpleCommands",
+                    "matchSetup"
                 ],
                 "autoloadPlayerlist": false,
                 "permissions": {

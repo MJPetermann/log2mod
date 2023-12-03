@@ -1,6 +1,6 @@
 import { readdirSync } from 'node:fs';
 
-const pluginFiles = readdirSync("./plugins").filter(file => file.endsWith('.js'));
+const pluginFiles = readdirSync("./plugins").filter(file => file.endsWith('.mjs'));
 
 async function loadPlugins(server){
     server.plugins = []
