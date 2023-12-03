@@ -1,4 +1,4 @@
-# log2mod
+# log2mod for CS2
 Log2mod makes it possible to write JavaScript plugins for Counter Strike 2. It listens to events via the servers 'log to http' funtion and executes commands with RCON.
 
 ## Features
