@@ -1,5 +1,6 @@
 import express from 'express'
 import serverjson from './cfg/serverlist.json' assert {type: 'json'}
+import log2modConfig from "./cfg/log2mod.json" assert {type: 'json'}
 import { initServerlist, serverManagers } from './modules/serverManager.js';
 import { matchEvent } from './modules/eventManager.js';
 
@@ -10,7 +11,7 @@ const app = express();
 
 app.use(express.text())
 
-const port = 3000;
+const port = log2modConfig.port;
 
 app.post('/', (req, res) => {
     const content = req.body;
@@ -33,6 +34,6 @@ async function eventLog(serverip, logs) {
     }
     for (const line of logs.split('\n')) {
         if (!line) return
-        matchEvent(server, line.slice(28));
+        await matchEvent(server, line.slice(28));
     }
 }

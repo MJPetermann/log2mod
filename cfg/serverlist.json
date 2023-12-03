@@ -1,7 +1,38 @@
 {
     "servers": [
-        {"name": "test", "ip": "172.0.0.1", "port": "27015", "rconPassword": "hallo123", "config":{"test": true, "publicIp": "172.0.0.1"}},
-        {"name": "local", "ip": "192.168.178.38", "port": "27015", "rconPassword": "hallo123", "config":{"plugins":["rconCommand"]}}
-
+        {
+            "name": "test",
+            "ip": "172.0.0.1",
+            "port": "27015",
+            "rconPassword": "hallo123",
+            "config": {
+                "test": true,
+                "publicIp": "172.0.0.1",
+                "admins": [
+                    "MJP"
+                ]
+            }
+        },
+        {
+            "name": "local",
+            "ip": "192.168.178.38",
+            "port": "27015",
+            "rconPassword": "hallo123",
+            "config": {
+                "plugins": [
+                    "simpleCommands"
+                ],
+                "autoloadPlayerlist": false,
+                "permissions": {
+                    "default": {
+                        "permissions":["basic.*"]
+                    },
+                    "admin": {
+                        "permissions":["*"],
+                        "players": ["U:1:395318202"]
+                    }
+                }
+            }
+        }
     ]
 }

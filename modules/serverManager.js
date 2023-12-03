@@ -4,6 +4,7 @@ import { loadPlugins } from "./pluginManager.js"
 import { initCommands } from "./features/commandManager.js"
 import { initPlayerlist } from "./features/playerlist.js"
 import { initPermission } from "./features/permissionManager.js"
+import log2modConfig from "../cfg/log2mod.json" assert {type: 'json'}
 
 const serverManagers = []
 class ServerManager extends event.EventEmitter{
@@ -15,6 +16,7 @@ class ServerManager extends event.EventEmitter{
         this.rconPassword = data.rconPassword || ""
         this.config = data.config || {}
     }
+
     async init(){
         await loadRcon(this)
         if(!(await this.loadPublicIp())) return
@@ -29,9 +31,11 @@ class ServerManager extends event.EventEmitter{
         this.emit("ready")
 
     }
+
     log(logText){
         console.log(this.name+"@"+this.ip+":"+ this.port + " : " + logText)
     }
+
     async loadPublicIp () {
         const publicIpRegex = /udp\/ip\s*:\s*\d+\.\d+\.\d+\.\d+:\d+\s*\(public\s+(\d+\.\d+\.\d+\.\d+):\d+\)/
         const checked = await this.statusRcon()
@@ -40,6 +44,9 @@ class ServerManager extends event.EventEmitter{
             this.log("Server is not reachable")
             return false
         }
+
+        this.Rcon(["log on","mp_logdetail 3","mp_logmoney 1","mp_logdetail_items 1","logaddress_add_http \"http://"+log2modConfig.ip+":"+log2modConfig.port+"\""])
+
         this.publicIp = checked.match(publicIpRegex)[1]
         return true
     }

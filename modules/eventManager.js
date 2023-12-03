@@ -7,7 +7,6 @@ async function matchEvent(server, line){
         if(!match) continue
 
         const data = event.format(match)
-        // console.log(event.name + " on " + server.name)
         server.emit(event.name, data)
     }
 }

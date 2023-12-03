@@ -13,26 +13,26 @@ export async function initPlayerlist(server) {
 
     if(server.config.autoloadPlayerlist) server.Rcon(["mp_restartgame 1"])
 
-    server.on("playerSwitch", (data) => {
+    server.on("playerSwitch", async (data) => {
         const player = server.players.filter(testplayer => testplayer.steamId3 == data.player.steamId3)[0]
         if (player) return player.side = data.player.side
-        addPlayer(server, data.player)
+        await addPlayer(server, data.player)
     })
 
-    server.on("playerSay", (data) => {
+    server.on("playerSay", async (data) => {
         const player = server.players.filter(testplayer => testplayer.steamId3 == data.player.steamId3)[0]
         if (player) return player.side = data.player.side
-        addPlayer(server, data.player)
+        await addPlayer(server, data.player)
     })
 
-    server.on("playerDisconnect", (data) => {
+    server.on("playerDisconnect", async (data) => {
         removePlayer(server, data.player)
     })
 
-    server.on("playerPickedUp", (data) => {
+    server.on("playerPickedUp", async (data) => {
         const player = server.players.filter(testplayer => testplayer.steamId3 == data.player.steamId3)[0]
         if (player) return player.side = data.player.side
-        addPlayer(server, data.player)
+        await addPlayer(server, data.player)
     })
 }
 
@@ -45,9 +45,9 @@ async function addPlayer(server, player) {
 }
 
 async function removePlayer(server, player) {
-    server.log("Removed " + player.name + " to list")
     const playerIndex = server.players.findIndex(testplayer => testplayer.steamId3 == player.steamId3)
     if (playerIndex == -1) return
+    server.log("Removed " + player.name + " to list")
     server.players.splice(playerIndex)
 }
 
