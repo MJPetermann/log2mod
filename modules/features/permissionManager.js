@@ -1,11 +1,8 @@
-async function playerHasPermission(server, command, dataplayer) {
+async function playerHasPermission(server, command, player) {
     if(!server.config.permissions) return true
     if (server.config.permissions.default && await permissionsForCommand(command.permission, server.config.permissions.default.permissions)) return true
-
-    const player = server.players.filter(testplayer => testplayer.steamId3 == dataplayer.steamId3)[0]
     if(!player) return false
     return await permissionsForCommand(command.permission, player.permissions)
-    
 }
 
 async function permissionsForCommand(basePermission, checkedPermissions){

@@ -1,21 +1,17 @@
 import Rcon from 'rcon';
 
-const colours = [
-    {name:"default", colour:""},
-    {name:"white", colour:""},
-    {name:"green", colour:""},
-    {name:"blue", colour:""},
-    {name:"dark blue", colour:""},
-    {name:"dark red", colour:""},
-    {name:"gold", colour:""},
-    {name:"light green", colour:""},
-    {name:"light red", colour:""},
-    {name:"light green", colour:""},
-    {name:"pink", colour:""},
-    {name:"pale red", colour:""},
-    {name:"light blue", colour:""},
-    {name:"yellow", colour:"	"},
-]
+const colors = [
+    { name: 'white', code: '\u0001' },          // #FFFFFF
+    { name: 'red', code: '\u0002' },            // #FF0000
+    { name: 'purple', code: '\u0003' },         // #BB82F0
+    { name: 'green', code: '\u0004' },          // #41FF41
+    { name: 'lightGreen', code: '\u0005' },     // #C0FF91
+    { name: 'lime', code: '\u0006' },           // #A3FF48
+    { name: 'lightRed', code: '\u0007' },       // #FF4141
+    { name: 'grey', code: '\u0008' },           // #C6CBD0
+    { name: 'yellow', code: '\u0009' },         // #EDE47B
+    { name: 'orange', code: '\u0010' },         // #E4AF3A
+  ];
 
 // for tests
 async function rconCommandTest(server, commands){
@@ -23,7 +19,7 @@ async function rconCommandTest(server, commands){
         for (const command of commands) {
             server.log("RCON: "+command)
         }
-        return true
+        return "rcon-response"
     }
 }
 
@@ -95,8 +91,8 @@ async function sendSayCommands(server, texts) {
 
 async function replaceColour(text){
     let tempText = text
-    for (const colour of colours){
-        tempText = tempText.replaceAll(("{"+colour.name+"}"), colour.colour)
+    for (const colour of colors){
+        tempText = tempText.replaceAll(("{"+colour.name+"}"), colour.code)
     }
     return tempText
 }

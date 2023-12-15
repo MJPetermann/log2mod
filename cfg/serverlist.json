@@ -7,10 +7,7 @@
             "rconPassword": "hallo123",
             "config": {
                 "test": true,
-                "publicIp": "172.0.0.1",
-                "admins": [
-                    "MJP"
-                ]
+                "publicIp": "172.0.0.1"
             }
         },
         {
@@ -19,6 +16,8 @@
             "port": "27015",
             "rconPassword": "hallo123",
             "config": {
+                "active": false,
+
                 "plugins": [
                     "simpleCommands",
                     "matchSetup"

@@ -6,7 +6,7 @@ async function matchEvent(server, line){
         
         if(!match) continue
 
-        const data = event.format(match)
+        const data = event.format(match, server)
         server.emit(event.name, data)
     }
 }

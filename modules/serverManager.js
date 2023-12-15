@@ -18,6 +18,7 @@ class ServerManager extends event.EventEmitter{
     }
 
     async init(){
+        if (this.config?.active != undefined && !this.config.active) return
         await loadRcon(this)
         if(!(await this.loadPublicIp())) return
         await initPermission(this)

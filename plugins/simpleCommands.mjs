@@ -21,7 +21,7 @@ export default class simpleCommands {
         server.command.on("list", () => {
             const messages = []
             messages.push("--- playerlist ---")
-            for (const player of server.players) {
+            for (const player of server.player.list) {
                 messages.push(player.name)
             }
             messages.push("--- playerlist ---")

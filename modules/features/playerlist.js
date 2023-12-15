@@ -8,50 +8,57 @@ class Player {
     }
 }
 
-export async function initPlayerlist(server) {
-    server.players = []
+export function initPlayerlist(server) {
+    server.player = {}
+    server.player.list = []
 
     if(server.config.autoloadPlayerlist) server.Rcon(["mp_restartgame 1"])
 
-    server.on("playerSwitch", async (data) => {
-        const player = server.players.filter(testplayer => testplayer.steamId3 == data.player.steamId3)[0]
-        if (player) return player.side = data.player.side
-        await addPlayer(server, data.player)
-    })
+    server.player.get = (server, player) => {
+        return getPlayer(server, player)
+    }
 
-    server.on("playerSay", async (data) => {
-        const player = server.players.filter(testplayer => testplayer.steamId3 == data.player.steamId3)[0]
-        if (player) return player.side = data.player.side
-        await addPlayer(server, data.player)
-    })
+    server.player.getBySteamId3 = (server, steamId3) => {
+        return getPlayerBySteamId3(server, steamId3)
+    }
 
     server.on("playerDisconnect", async (data) => {
         removePlayer(server, data.player)
     })
-
-    server.on("playerPickedUp", async (data) => {
-        const player = server.players.filter(testplayer => testplayer.steamId3 == data.player.steamId3)[0]
-        if (player) return player.side = data.player.side
-        await addPlayer(server, data.player)
-    })
 }
 
-async function addPlayer(server, player) {
+function getPlayer(server, player) {
+    const foundplayer = server.player.list.filter(player => player.steamId3 == player.steamId3)[0]
+    if (!foundplayer) return addPlayer(server, player)
+    if (player.side) foundplayer.side = player.side
+    return foundplayer
+    
+}
+
+function getPlayerBySteamId3(server, steamId3) {
+    const foundplayer = server.player.list.filter(player => player.steamId3 == steamId3)[0]
+    if (!foundplayer) return
+    return foundplayer
+}
+
+function addPlayer(server, player) {
     server.log("Added " + player.name +" [" + player.steamId3 +"] to list")
     const newPlayer = new Player(player, server)
-    newPlayer.permissions.push(...(await getPlayersPermissions(player, server)))
-    server.players.push(newPlayer)
-
+    newPlayer.permissions.push(...(getPlayersPermissions(player, server)))
+    server.player.list.push(newPlayer)
+    server.emit("playerAdded", newPlayer)
+    return newPlayer
 }
 
-async function removePlayer(server, player) {
-    const playerIndex = server.players.findIndex(testplayer => testplayer.steamId3 == player.steamId3)
+function removePlayer(server, player) {
+    const playerIndex = server.player.list.findIndex(testplayer => testplayer.steamId3 == player.steamId3)
     if (playerIndex == -1) return
     server.log("Removed " + player.name + " to list")
-    server.players.splice(playerIndex)
+    server.player.list.splice(playerIndex)
+    server.emit("playerRemoved")
 }
 
-async function getPlayersPermissions(player, server){
+function getPlayersPermissions(player, server){
     if(!server.config.permissions) return ["*"]
     const permissions = []
     for (const group in server.config.permissions){
