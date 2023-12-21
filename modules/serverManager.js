@@ -1,9 +1,12 @@
 import event from "events"
+import express from 'express';
+
 import { loadRcon } from "./features/rcon.js"
 import { loadPlugins } from "./pluginManager.js"
 import { initCommands } from "./features/commandManager.js"
 import { initPlayerlist } from "./features/playerlist.js"
 import { initPermission } from "./features/permissionManager.js"
+
 import log2modConfig from "../cfg/log2mod.json" assert {type: 'json'}
 
 const serverManagers = []
@@ -15,6 +18,7 @@ class ServerManager extends event.EventEmitter{
         this.port = data.port || 27015
         this.rconPassword = data.rconPassword || ""
         this.config = data.config || {}
+        this.router = express.Router();
     }
 
     async init(){
@@ -23,7 +27,7 @@ class ServerManager extends event.EventEmitter{
         if(!(await this.loadPublicIp())) return
         await initPermission(this)
         await initCommands(this)
-        await initPlayerlist(this)
+        initPlayerlist(this)
         await loadPlugins(this)
         
         this.sayRcon(["{gold}Log2Mod initiated!"])
@@ -53,15 +57,17 @@ class ServerManager extends event.EventEmitter{
     }
 } 
 
-async function loadServer(server){
-    serverManagers.push(new ServerManager(server))
-    await serverManagers[(serverManagers.length)-1].init()
+async function loadServer(server, app){
+    const serverManager = new ServerManager(server) 
+    serverManagers.push(serverManager)
+    app.use("/servers/"+server.name, serverManager.router)
+    await serverManager.init()
 }
 
-async function initServerlist (serverlist) {
+async function initServerlist (serverlist, app) {
     for (const server of serverlist){
         if (server.active == false) return
-        await loadServer(server)
+        await loadServer(server, app)
     }
 }
 

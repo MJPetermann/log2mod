@@ -11,10 +11,13 @@ async function loadPlugins(server){
     }
 }
 
-async function loadPlugin (server, plugin) {
-    await plugin.init(server)
-    server.plugins.push({"name": plugin.name, "commands": plugin.commands, "description": plugin.description, "author": plugin.author})
-    server.command.list.push(...plugin.commands)
+async function loadPlugin (server, pluginClass) {
+    const plugin = new pluginClass(server)
+    if (pluginClass.router) {
+        server.router.use(`/plugins/${pluginClass.name}`, pluginClass.router);
+    }
+    server.plugins.push({"name": pluginClass.name, "commands": pluginClass.commands, "description": pluginClass.description, "author": pluginClass.author})
+    server.command.list.push(...pluginClass.commands)
 }
 
 export {loadPlugins, loadPlugin}

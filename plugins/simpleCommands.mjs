@@ -1,4 +1,5 @@
 export default class simpleCommands {
+
     static name = "simpleCommands"
     static description = "Test the rcon connection."
     static author = "MJPetermann"
@@ -6,7 +7,12 @@ export default class simpleCommands {
         { command: "rcon", permission: "admin.rcon", description: "allows for the execution of rcon with the text chat" },
         { command: "list", permission: "basic.list", description: "lists all players on the server with player name" },
         { command: "help", permission: "basic.help", description: "lists all commands on the server and provides info" }]
-    static init(server) {
+
+    constructor(server) {
+        this.server = server;
+        this.init(server);
+    }
+    init(server) {
 
         server.on("ready", ()=> server.sayRcon(["{pink}simpleCommands: {gold}Type '!help' for commands."]))
 

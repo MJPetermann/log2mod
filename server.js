@@ -4,10 +4,11 @@ import log2modConfig from "./cfg/log2mod.json" assert {type: 'json'}
 import { initServerlist, serverManagers } from './modules/serverManager.js';
 import { matchEvent } from './modules/eventManager.js';
 
-await initServerlist(serverjson.servers)
+const app = express();
+
+await initServerlist(serverjson.servers, app)
 const servers = serverManagers
 
-const app = express();
 
 app.use(express.text())
 

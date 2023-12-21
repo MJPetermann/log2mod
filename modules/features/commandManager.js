@@ -9,6 +9,10 @@ class CommandManager extends event.EventEmitter {
 
 export async function initCommands(server) {
     server.command = new CommandManager()
+    server.router.get('/commands', (req, res) => {
+        const commands = server.command.list.map(command => command.command)
+        res.json(commands)
+    })
     server.on("playerCommand", async (data) => {
         const command = (server.command.list.filter((command) => command.command == data.command)[0])
         if (!command) return
