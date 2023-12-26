@@ -24,7 +24,7 @@ app.post('/', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Log2mod is ready!`);
+    console.log(`Log2mod is ready!`)
 });
 
 async function eventLog(serverip, logs) {

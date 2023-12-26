@@ -89,7 +89,7 @@ const events = [
     },
     {
         name: "matchScoreUpdate",
-        regex: /^MatchStatus: Score: (\d+):(\d+) on map "([^"]+)" RoundsPlayed: (\d+)/,
+        regex: /^MatchStatus: Score: (\d+):(\d+) on map "([^"]+)" RoundsPlayed: (-?\d+)/,
         data: ["", "ctScore", "tScore", "map", "roundPlayed"],
         format: function (match) {
             return {
@@ -127,7 +127,24 @@ const events = [
                 teamname: match[2]
             }
         }
-    }
+    },
+    // event: matchEnd example: "Game Over: scrimcomp2v2  de_dust2 score 5:9 after 26 min"
+    {
+        name: "matchEnd",
+        regex: /^Game Over: (.+)  (.+) score (\d+):(\d+) after (\d+) min/,
+        data: ["", "type", "map", "ctScore", "tScore", "duration"],
+        format: function (match) {
+            return {
+                map: match[2],
+                type: match[1],
+                score: {
+                    ct: match[3],
+                    t: match[4]
+                },
+                duration: match[5]
+            }
+        }
+    },
     
 ]
 

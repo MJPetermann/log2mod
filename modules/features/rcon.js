@@ -1,16 +1,21 @@
 import Rcon from 'rcon';
 
-const colors = [
+export const colors = [
     { name: 'white', code: '\u0001' },          // #FFFFFF
-    { name: 'red', code: '\u0002' },            // #FF0000
-    { name: 'purple', code: '\u0003' },         // #BB82F0
-    { name: 'green', code: '\u0004' },          // #41FF41
+    { name: 'lightRed', code: '\u000F' },       // #FF5555
+    { name: 'red', code: '\u0007' },            // #FF4343
+    { name: 'darkRed', code: '\u0002' },        // #FF0000
     { name: 'lightGreen', code: '\u0005' },     // #C0FF91
     { name: 'lime', code: '\u0006' },           // #A3FF48
-    { name: 'lightRed', code: '\u0007' },       // #FF4141
-    { name: 'grey', code: '\u0008' },           // #C6CBD0
-    { name: 'yellow', code: '\u0009' },         // #EDE47B
-    { name: 'orange', code: '\u0010' },         // #E4AF3A
+    { name: 'green', code: '\u0004' },          // #41FF41
+    { name: 'grey', code: '\u0008' },           // #D6DCE0
+    { name: 'yellow', code: '\u0009' },         // #FFF584
+    { name: 'orange', code: '\u0010' },         // #FCC241
+    { name: 'blue', code: '\u000B' },           // #6AAAF1
+    { name: 'darkBlue', code: '\u000C' },       // #5474FF
+    { name: 'lightPurple', code: '\u0003' },    // #C489FC
+    { name: 'purple', code: '\u000E' },         // #E832FB
+    { name: 'darkPurple', code: '\u000D' },     // #964FFF
   ];
 
 // for tests
@@ -84,12 +89,12 @@ async function checkServer(server) {
 async function sendSayCommands(server, texts) {
     const editedText = []
     for (const text of texts){
-        editedText.push(await replaceColour("say " + text))
+        editedText.push(replaceColour("say " + text))
     }
     sendCommands(server, editedText)
 }
 
-async function replaceColour(text){
+function replaceColour(text){
     let tempText = text
     for (const colour of colors){
         tempText = tempText.replaceAll(("{"+colour.name+"}"), colour.code)

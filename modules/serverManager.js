@@ -30,7 +30,7 @@ class ServerManager extends event.EventEmitter{
         initPlayerlist(this)
         await loadPlugins(this)
         
-        this.sayRcon(["{gold}Log2Mod initiated!"])
+        this.sayRcon(["{green}Log2Mod initiated!{green}"])
         this.log(`Initiated (${this.plugins.length} plugin(s) with ${this.command.list.length} command(s))`)
 
         this.emit("ready")

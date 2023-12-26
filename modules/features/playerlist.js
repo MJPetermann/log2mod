@@ -28,7 +28,7 @@ export function initPlayerlist(server) {
 }
 
 function getPlayer(server, player) {
-    const foundplayer = server.player.list.filter(player => player.steamId3 == player.steamId3)[0]
+    const foundplayer = server.player.list.filter(testplayer => testplayer.steamId3 == player.steamId3)[0]
     if (!foundplayer) return addPlayer(server, player)
     if (player.side) foundplayer.side = player.side
     return foundplayer
@@ -36,7 +36,7 @@ function getPlayer(server, player) {
 }
 
 function getPlayerBySteamId3(server, steamId3) {
-    const foundplayer = server.player.list.filter(player => player.steamId3 == steamId3)[0]
+    const foundplayer = server.player.list.filter(testplayer => testplayer.steamId3 == steamId3)[0]
     if (!foundplayer) return
     return foundplayer
 }
