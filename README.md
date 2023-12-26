@@ -12,10 +12,10 @@ Log2mod makes it possible to write JavaScript plugins for Counter Strike 2. It l
 - permission system
 - send Rcon commands
 - easy chat colours
+- REST API to be accessed by plugins
 
 ### Planned:
 - add all events logged to console
-- REST API to be accessed by plugins
 - documentation
 
 ## Getting started
