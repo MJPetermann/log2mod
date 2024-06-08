@@ -37,14 +37,14 @@ export default class simpleCommands {
 
         server.command.on("list", () => {
             const messages = []
-            messages.push("--- playerlist ---")
+            messages.push("{green}--- playerlist ---")
             for (const player of server.player.list) {
-                messages.push(player.name)
+                messages.push("{orange}" + player.name)
             }
-            messages.push("--- playerlist ---")
+            messages.push("{green}--- playerlist ---")
             server.sayRcon(messages)
         })
-
+        
         server.command.on("help", async (data) => {
             if (data.arguments[0]) {
                 const command = server.command.list.filter(command => command.command == data.arguments[0])[0]

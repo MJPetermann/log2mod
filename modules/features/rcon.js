@@ -42,6 +42,7 @@ async function sendCommands(server, commands) {
             for (const command of commands) {
                 connection.send(command)
             }
+            connection.disconnect()
         }).on('error', (err) => {
             console.log("error " + err);
             connection.disconnect()
@@ -69,6 +70,7 @@ async function checkServer(server) {
 
             connection.on('auth', () => {
                 connection.send("status")
+                connection.disconnect()
             }).on('error', (err) => {
                 server.log("RCON: "+ err)
                 connection.disconnect()

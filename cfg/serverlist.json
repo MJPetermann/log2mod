@@ -33,6 +33,78 @@
                     }
                 }
             }
+        },
+        {
+            "name": "MM01",
+            "ip": "172.16.101.20",
+            "port": "27015",
+            "rconPassword": "mmadmin!",
+            "config": {
+                "active": true,
+
+                "plugins": [
+                    "simpleCommands",
+                    "matchSetup"
+                ],
+                "autoloadPlayerlist": false,
+                "permissions": {
+                    "default": {
+                        "permissions":["basic.*"]
+                    },
+                    "admin": {
+                        "permissions":["*"],
+                        "players": ["U:1:395318202"]
+                    }
+                }
+            }
+        },
+        {
+            "name": "MM02",
+            "ip": "172.16.101.20",
+            "port": "27025",
+            "rconPassword": "mmadmin!",
+            "config": {
+                "active": true,
+
+                "plugins": [
+                    "simpleCommands",
+                    "matchSetup"
+                ],
+                "autoloadPlayerlist": false,
+                "permissions": {
+                    "default": {
+                        "permissions":["basic.*"]
+                    },
+                    "admin": {
+                        "permissions":["*"],
+                        "players": ["U:1:395318202"]
+                    }
+                }
+            }
+        },
+        {
+            "name": "MM03",
+            "ip": "172.16.101.20",
+            "port": "27035",
+            "rconPassword": "mmadmin!",
+            "config": {
+                "active": true,
+
+                "plugins": [
+                    "simpleCommands",
+                    "matchSetup"
+                ],
+                "autoloadPlayerlist": false,
+                "permissions": {
+                    "default": {
+                        "permissions":["basic.*"]
+                    },
+                    "admin": {
+                        "permissions":["*"],
+                        "players": ["U:1:395318202"]
+                    }
+                }
+            }
         }
     ]
 }

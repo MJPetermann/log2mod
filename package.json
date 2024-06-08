@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/MJPetermann/log2mod#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "nodemon": "^3.0.1",
     "rcon": "^1.1.0"

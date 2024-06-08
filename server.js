@@ -3,8 +3,18 @@ import serverjson from './cfg/serverlist.json' assert {type: 'json'}
 import log2modConfig from "./cfg/log2mod.json" assert {type: 'json'}
 import { initServerlist, serverManagers } from './modules/serverManager.js';
 import { matchEvent } from './modules/eventManager.js';
+import cors from 'cors'
 
 const app = express();
+
+const corsOptions = {
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions)); // Use the cors middleware with your options
 
 await initServerlist(serverjson.servers, app)
 const servers = serverManagers

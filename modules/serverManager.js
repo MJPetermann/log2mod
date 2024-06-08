@@ -29,6 +29,21 @@ class ServerManager extends event.EventEmitter{
         await initCommands(this)
         initPlayerlist(this)
         await loadPlugins(this)
+
+        this.router.get("/", (req, res) => {
+            // output this as json
+            res.json({
+                name: this.name,
+                ip: this.ip,
+                port: this.port,
+                rconPassword: this.rconPassword,
+                config: this.config,
+                publicIp: this.publicIp,
+                active: this.active,
+                plugins: this.plugins.map(plugin => plugin.name),
+                commands: this.command.list.map(command => command)
+            })
+		});
         
         this.sayRcon(["{green}Log2Mod initiated!{green}"])
         this.log(`Initiated (${this.plugins.length} plugin(s) with ${this.command.list.length} command(s))`)
@@ -57,17 +72,24 @@ class ServerManager extends event.EventEmitter{
     }
 } 
 
-async function loadServer(server, app){
+async function loadServer(server, router){
     const serverManager = new ServerManager(server) 
     serverManagers.push(serverManager)
-    app.use("/servers/"+server.name, serverManager.router)
+    router.use("/"+server.name, serverManager.router)
     await serverManager.init()
 }
 
 async function initServerlist (serverlist, app) {
+    var router = express.Router()
+    app.use(express.json())
+    app.use("/servers", router)
+
+    router.get("/", (req, res) => {
+    res.json(serverlist.filter(server => server.config.active != false).map(server => server.name))
+    })
     for (const server of serverlist){
         if (server.active == false) return
-        await loadServer(server, app)
+        await loadServer(server, router)
     }
 }
 
