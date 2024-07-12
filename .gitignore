@@ -132,3 +132,4 @@ dist
 
 cfg/serverlist.json
 plugins/
+cfg/log2mod.json
