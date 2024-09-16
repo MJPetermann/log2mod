@@ -6,6 +6,7 @@
             "port": "27015",
             "rconPassword": "hallo123",
             "config": {
+                "active": false,
                 "test": true,
                 "publicIp": "172.0.0.1"
             }

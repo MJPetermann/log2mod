@@ -1,0 +1,27 @@
+{
+    "servers": [
+        {
+            "name": "example",
+            "ip": "172.0.0.1",
+            "port": "27015",
+            "rconPassword": "hallo123",
+            "config": {
+                "test": true,
+                "active": false,
+                "autoloadPlayerlist": false,
+                "plugins": [
+                    "simpleCommands"
+                ],
+                "permissions": {
+                    "default": {
+                        "permissions":["basic.*"]
+                    },
+                    "admin": {
+                        "permissions":["*"],
+                        "players": ["U:1:395318202"]
+                    }
+                }
+            }
+        }
+    ]
+}

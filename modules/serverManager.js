@@ -38,12 +38,32 @@ class ServerManager extends event.EventEmitter{
                 port: this.port,
                 rconPassword: this.rconPassword,
                 config: this.config,
-                publicIp: this.publicIp,
+                publicIp: "",
                 active: this.active,
                 plugins: this.plugins.map(plugin => plugin.name),
                 commands: this.command.list.map(command => command)
             })
 		});
+
+        // Route to reload the log2mod server plugins, config and commands and removeing the event listeners and plugins
+        this.router.post("/reload", async (req, res) => {
+            this.removeAllListeners()
+            // if the plugin has event listeners, remove them
+            for (const plugin of this.plugins) {
+                if (plugin.removeAllListeners) plugin.removeAllListeners()
+                if (plugin.server.removeAllListeners) plugin.server.removeAllListeners()
+            }
+            this.plugins = []
+            await loadPlugins(this)
+            await initCommands(this)
+            await initPermission(this)
+            res.sendStatus(200)
+        })
+
+
+
+
+
         
         this.sayRcon(["{green}Log2Mod initiated!{green}"])
         this.log(`Initiated (${this.plugins.length} plugin(s) with ${this.command.list.length} command(s))`)
