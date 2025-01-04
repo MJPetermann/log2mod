@@ -2,7 +2,7 @@ import { colors } from "../modules/features/rcon.js"
 export default class simpleCommands {
 
     static name = "simpleCommands"
-    static description = "Test the rcon connection."
+    static description = "Test the rcon connection"
     static author = "MJPetermann"
     static commands = [
         { command: "rcon", permission: "admin.rcon", description: "allows for the execution of rcon with the text chat" },
