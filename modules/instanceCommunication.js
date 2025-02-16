@@ -83,6 +83,9 @@ function throwError(message, crash) {
 // send message to instance
 
 async function sendMessage(serverProcessInstance, message, callback) {
+    if (serverProcessInstance.status === "deleted") return throwError("Error while trying to send Message: Instance of " + serverProcessInstance.cfg.name + " was deleted!", false);
+    if (serverProcessInstance.status === "crashed") return throwError("Error while trying to send Message: Instance of " + serverProcessInstance.cfg.name + " crashed!", false);
+
     message.id = generateMessageId()
     serverProcessInstance.process.send(message);
     if (callback) {

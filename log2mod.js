@@ -48,9 +48,9 @@ loadServerConfig(serversOnStartup.servers[0])
 setTimeout(() => {
     loadServerConfig(serversOnStartup.servers[1])
 }, 500);
-setTimeout(() => {
-    reloadServerRoute(serversOnStartup.servers[0].name)
-}, 10000);
+// setTimeout(() => {
+//     reloadServerRoute(serversOnStartup.servers[0].name)
+// }, 10000);
 
 // app.get('/createRoute', (req, res) => {
 //     const serverRouter = new express.Router();

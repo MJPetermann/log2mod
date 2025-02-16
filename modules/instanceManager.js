@@ -1,6 +1,6 @@
 import { fork } from 'child_process'
 import { attachSendsHandler } from './instanceCommunication.js';
-import { createServerRoute } from './http.js';
+import { createServerRoute, reloadServerRoute } from './http.js';
 
 const serverProcesses = [];
 
@@ -70,6 +70,7 @@ async function reactivateInstance(serverConfig) {
         serverProcess.once('message', (message) => { 
             if (message.type === "hb" && !(timeout._destroyed)) resolve(serverConfig.name);
             clearTimeout(timeout);
+            reloadServerRoute(serverConfig.name)
         });
     });
 }
@@ -100,7 +101,8 @@ async function reloadServerConfig(serverConfig) {
     if (serverProcessInstanceIndex === -1) return throwError("Error while trying to reload Server Config: Server " + serverConfig.name + " not found!", false);
 
     await deleteInstance(serverConfig)
-    attachSendsHandler(await reactivateInstance(serverConfig));
+    let serverInstanceName = await reactivateInstance(serverConfig);
+    attachSendsHandler(serverInstanceName);
 }
 
 function throwError(message, crash) {

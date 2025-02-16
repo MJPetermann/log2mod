@@ -1,4 +1,5 @@
 import { httpHandler } from './http.js';
+import { handleLogs } from './event.js';
 
 var serverConfig = {}
 var serverRoute = null
@@ -31,6 +32,10 @@ function handleMessages() {
     
         if (message.type === "http") {
             httpHandler(message)
+        }
+
+        if (message.type === "log") {
+            handleLogs(message.logs)
         }
     });
     
