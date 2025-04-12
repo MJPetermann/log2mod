@@ -19,11 +19,6 @@ function createServerRoute(serverInstanceName) {
     serverProcesses[serverProcessInstanceIndex].route = route
     app.use("/" + serverInstanceName, function replacebleRouter(req, res, next) { serverProcesses[serverProcessInstanceIndex].route(req, res, next) });
 
-    serverProcesses[serverProcessInstanceIndex].route.get('/', (req, res) => { 
-        serverProcesses[serverProcessInstanceIndex].process.kill() 
-        res.send(serverProcesses[serverProcessInstanceIndex].status) 
-    });
-
     configureStandardRoute(serverProcessInstanceIndex);
 }
 

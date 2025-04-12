@@ -66,8 +66,8 @@ function messageHandler(serverProcessInstance, message) {
 function heartbeatHandler(serverProcessInstance, message) {
     const timeoutTime = 1000;
     const hbDelta = Date.now() - serverProcessInstance.lastHeartbeat - timeoutTime
-    if (hbDelta > 10) {
-        throwError("Error: Instance of " + serverProcessInstance.cfg.name + " did not respond in time!", false);
+    if (hbDelta > 20) {
+        throwError("Error: Instance of " + serverProcessInstance.cfg.name + " did not respond in time! " + hbDelta + "ms" , false);
     }
     serverProcessInstance.lastHeartbeat = Date.now();
 

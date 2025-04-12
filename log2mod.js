@@ -4,7 +4,7 @@ import {loadServerConfig, reloadServerConfig} from './modules/instanceManager.js
 import { reloadServerRoute } from './modules/http.js'
 
 import { fork } from 'child_process'
-import serversOnStartup from './cfg/serversOnStartup.json' assert {type: 'json'}
+import serversOnStartup from './cfg/serversOnStartup.json' with {type: 'json'}
 const app = express();
 
 const corsOptions = {
@@ -44,10 +44,14 @@ serversOnStartup.servers[0] =
             }
         }
 
-loadServerConfig(serversOnStartup.servers[0])
-setTimeout(() => {
-    loadServerConfig(serversOnStartup.servers[1])
-}, 500);
+// loadServerConfig(serversOnStartup.servers[0])
+// setTimeout(() => {
+//     loadServerConfig(serversOnStartup.servers[1])
+// }, 500);
+
+for (let i = 0; i < serversOnStartup.servers.length; i++) {
+    loadServerConfig(serversOnStartup.servers[i])
+}
 // setTimeout(() => {
 //     reloadServerRoute(serversOnStartup.servers[0].name)
 // }, 10000);

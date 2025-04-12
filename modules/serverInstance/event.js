@@ -1,7 +1,7 @@
 import { events } from "./eventlist.js";
 import { getPlayer } from "./features/players.js";
 
-const server = { player: {get: (server, playerdata) => {return getPlayer(playerdata)}}};
+const eventListeners = {};
 
 function handleLogs(logs) {
     console.time('handleLogs');
@@ -16,6 +16,26 @@ function handleLogs(logs) {
         }
     }
     console.timeEnd('handleLogs');
+}
+
+function emitEvent(event, data) {
+    if (eventListeners[event]) {
+        for (const listener of eventListeners[event]) {
+            listener(data);
+        }
+    }
+}
+
+function registerListener(event, callback) {
+    if (events.find(e => e.name === event) === undefined) return throwError(`Event ${event} does not exist`);
+    if (!eventListeners[event]) eventListeners[event] = [];
+    eventListeners[event].push(callback);
+}
+
+function throwError(message, crash) {
+    if (crash) throw new Error(message);
+    console.error(message);
+    return "Non fatal error accoured in instanceHander.js: " + message;
 }
 
 export { handleLogs }
