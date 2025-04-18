@@ -2,7 +2,7 @@
     "servers": [
         {
             "name": "example",
-            "ip": "172.0.0.1",
+            "ip": "217.94.49.59",
             "port": "27015",
             "rconPassword": "hallo123",
             "config": {

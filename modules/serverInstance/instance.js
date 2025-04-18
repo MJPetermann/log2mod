@@ -23,7 +23,7 @@ async function initServer(message) {
 
 function handleMessages() {
     process.on('message', (message) => {
-        console.log("Handling message: " + message.type);
+        fLog("Handling message: " + message.type);
         if (message.type === "instr") {
             if (message.instr === "shutdown") {
                 process.exit();
@@ -44,3 +44,4 @@ function handleMessages() {
 function fLog(message) {
     console.log(serverConfig.name + "@" + serverConfig.ip + " - " + message);
 }
+export { fLog, serverConfig };

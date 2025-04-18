@@ -19,31 +19,6 @@ app.use(cors(corsOptions)); // Use the cors middleware with your options
 
 
 
-serversOnStartup.servers[0] = 
-    {
-            "name": "example",
-            "ip": "172.0.0.1",
-            "port": "27015",
-            "rconPassword": "hallo123",
-            "config": {
-                "test": true,
-                "active": false,
-                "autoloadPlayerlist": false,
-                "plugins": [
-                    "simpleCommands"
-                ],
-                "permissions": {
-                    "default": {
-                        "permissions":["basic.*"]
-                    },
-                    "admin": {
-                        "permissions":["*"],
-                        "players": ["U:1:395318202"]
-                    }
-                }
-            }
-        }
-
 // loadServerConfig(serversOnStartup.servers[0])
 // setTimeout(() => {
 //     loadServerConfig(serversOnStartup.servers[1])
@@ -81,5 +56,12 @@ for (let i = 0; i < serversOnStartup.servers.length; i++) {
 app.listen(3000, () => {
     console.log(`Log2mod is ready!`)
 });
+app.use(express.text())
+app.post('/', async (req, res) => {
+    console.log("Request received!")
+    console.log(req.body)
+    res.sendStatus(200);
+}
+);
 
 export {app}
