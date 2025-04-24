@@ -1,15 +1,5 @@
 const events = [
     {
-        name: "getPlayerMessage",
-        regex: /getPlayer_message: "(\w+)"/,
-        data: ["", "message"],
-        format: function (match) {
-            return {
-                message: match[1]
-            };
-        }
-    },
-    {
         name: "playerCommand",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" say(_team)? "(?:[!.\/])(.*)"/,
         data: ["", "name", "playerId", "steamId3", "side", "chatType", "command", "arguments"],
@@ -29,7 +19,7 @@ const events = [
         }
     },
     {
-        name: "freezTimeStart",
+        name: "freezeTimeStart",
         regex: /Starting Freeze period/,
         data: [],
         format: function () {
