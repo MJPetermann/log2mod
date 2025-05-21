@@ -1,10 +1,10 @@
-import { fLog } from './instance.js';
+import {instance} from './instance.js';
 function httpHandler (message) {
     if (message.method === "get") {
-        fLog("GET request received!");
+        instance.log("GET request received!");
     }
     if (message.method === "post") {
-        fLog("POST request received!");
+        instance.log("POST request received!");
     }
     if (message.text) process.send({ type: "http", id:message.id, text: "hallo"});
     if (!message.text) process.send({ type: "http", id:message.id, text: message.text});

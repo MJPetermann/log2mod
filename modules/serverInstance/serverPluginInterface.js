@@ -23,6 +23,7 @@ export default class ServerPluginInterface {
         get: this.#httpGet,
         post: this.#httpPost,
       }
+    }
   }
   
   #on = (event, callback, id) => {
@@ -38,18 +39,40 @@ export default class ServerPluginInterface {
     this.events[event].push({ callback: callback, id: id })
   }
   
-  #off = ("event", id) => {
+  #off = (event, id) => {
     if (this.events[event] === undefined) return server.log(`Event ${event} not registered`, "warn")
     this.events[event] = this.events[event].filter(listener => listener.id !== id)
   }
 
-  rcon(command, callback) {
-    server.rcon(command, callback)
+  #message = (message) => {
+
   }
 
-  // add command.on and command.off
-  command(command, callback) {
-    server.command.add(command, callback)
-  }
+  #log = (message) => {
 
+  }
+  #playerList = () => {
+  
+  }
+  #playerReload = () => {
+  
+  }
+  #playerGet = (id) => {
+  
+  }
+  #httpGet = (url, callback) => {
+
+  }
+  #httpPost = (url, data, callback) => {
+
+  }
+  #commandOn = (command, callback) => {
+
+  }
+  #commandOff = (command, callback) => {
+
+  }
+  #rcon = (command, callback) => {
+
+  }
 }

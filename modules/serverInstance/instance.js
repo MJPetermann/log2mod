@@ -1,5 +1,7 @@
 import { httpHandler } from './http.js';
 import { handleLogs } from './event.js';
+import { rcon } from './features/rcon.js'
+import l2mConfig from '../../cfg/l2m.json' with {type: 'json'}
 
 var serverConfig = {}
 var serverRoute = null
@@ -17,7 +19,13 @@ async function initServer(message) {
     setInterval(() => {
         process.send({ type: "hb", pid: process.pid });
     }, 1000);
+    setInterval(() => {
+        checkServerConnection()
+    }, 10000);
     handleMessages();
+
+    initialConnection();
+
     fLog("Server initialized!");
 }
 
@@ -41,7 +49,23 @@ function handleMessages() {
     
 }
 
+async function initialConnection() {
+    if(!(await rcon.status(serverConfig))) {
+        process.exit();
+    }
+    serverConfig.publicIp = ((await rcon.status(serverConfig)).match(/udp\/ip\s*:\s*\d+\.\d+\.\d+\.\d+:\d+\s*\(public\s+(\d+\.\d+\.\d+\.\d+):\d+\)/)[1])
+    rcon.command(serverConfig, ["log on","mp_logdetail 3","mp_logmoney 1","mp_logdetail_items 1","logaddress_add_http \"http://"+l2mConfig.ip+":"+l2mConfig.port+"/"+ serverConfig.name +"/\""]);
+    process.send({ type: "publicIp", publicIp: serverConfig.publicIp });
+}
+    
+async function checkServerConnection() {
+    if(!(await rcon.status(serverConfig))) {
+        process.exit();
+    }
+}
+
 function fLog(message) {
     console.log(serverConfig.name + "@" + serverConfig.ip + " - " + message);
 }
-export { fLog, serverConfig };
+
+export const instance = { log: fLog, config: serverConfig };

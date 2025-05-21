@@ -60,6 +60,9 @@ function messageHandler(serverProcessInstance, message) {
     if (message.type === "http") {
         messageReceived.emit(message.id, message);
     }
+    if (message.type === "publicIp") {
+        serverProcessInstance.cfg.publicIp = message.publicIp;
+    }
 
 }
 

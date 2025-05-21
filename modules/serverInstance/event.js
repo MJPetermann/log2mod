@@ -1,29 +1,60 @@
 import { events } from "./eventList.js";
 import { getPlayer } from "./features/players.js";
+import { instance } from './instance.js';
 
 const eventListeners = {};
-let logsJsonMode = false;
-let logsJsonBuffer = "";
+let jsonBuffer = '';
+let inJsonBlock = false;
 function handleLogs(logs) {
     console.time('handleLogs');
+    console.log("Logs: ", logs);
     for (const line of logs.split('\n')) {
-        console.log(line.slice(28));
-        if (logsJsonMode) {
-            
-            if (line.slice(28) == "}}JSON_END") {
-                logsJsonMode = false;
-                logsJsonBuffer = "{" + logsJsonBuffer + "}}";
-                const json = JSON.parse(logsJsonBuffer);
-                logsJsonBuffer = "";
-                emitEvent("json", json);
+        let logLine = line.slice(28);
+        if (logLine.length < 1) continue;
+
+        instance.log(logLine);
+
+        if (inJsonBlock) {
+            if (logLine.startsWith('JSON_BEGIN')) {
+                logLine = logLine.substring('JSON_BEGIN'.length);
+            }
+
+            if (logLine.endsWith('}}JSON_END')) {
+                inJsonBlock = false;
+                let jsonPart = logLine.substring(0, logLine.length - 'JSON_END'.length);
+                if (jsonPart.endsWith('}')) {
+                    jsonPart = jsonPart.substring(0, jsonPart.length - 1);
+                }
+                jsonBuffer += jsonPart;
+                jsonBuffer += '}';
+
+                let correctedJsonString = jsonBuffer.replace(/("[^"]*")\s*("[^"]*"\s*:)/g, '$1,$2');
+                correctedJsonString = correctedJsonString.replace(/("fields"\s*:\s*".*?")("players"\s*:\s*\{)/g, '$1,$2');
+
+                try {
+                    const json = JSON.parse(correctedJsonString);
+                    console.log("JSON: ", json);
+                    emitEvent("json", json);
+                } catch (e) {
+                    console.error('Error parsing JSON:', e);
+                    console.error('Buffer (after correction):', correctedJsonString);
+                } finally {
+                    jsonBuffer = '';
+                }
                 continue;
             }
-            logsJsonBuffer += line.slice(28) + "\n";
+            jsonBuffer += logLine;
             continue;
         }
-        if (line.slice(28) == "JSON_BEGIN{") logsJsonMode = true;
+        
+        if (logLine === "JSON_BEGIN{") {
+            inJsonBlock = true;
+            jsonBuffer = '{';
+            continue;
+        }
+
         for (const event of events) {
-            const match = line.slice(28).match(event.regex);
+            const match = logLine.match(event.regex);
             if (match) {
                 const data = event.format(match, getPlayer);
                 console.log(event.name, data);
