@@ -4,15 +4,28 @@ export default class ServerPluginInterface {
   constructor(server, plugin) {
     this.events = {}
     this.plugin = plugin
-    this.command = {
-      on: (command, callback) => {
+    this.interface = {
+      on: this.#on,
+      off: this.#off,
+      rcon: this.#rcon,
+      message: this.#message,
+      log: this.#log,
+      player: {
+        list: this.#playerList,
+        reload: this.#playerReload,
+        get: this.#playerGet
       },
-      off: (command) => {
+      command: {
+        on: this.#commandOn,
+        off: this.#commandOff,
+      },
+      http: {
+        get: this.#httpGet,
+        post: this.#httpPost,
       }
-    }
   }
   
-  on(event, callback, id) {
+  #on = (event, callback, id) => {
     if (this.events[event] == { callback: callback, id: id }) server.log(`Event ${event} already registered with id ${id}`, "warn")
     if (this.events[event] === undefined) {
         this.events[event] = []
@@ -24,8 +37,8 @@ export default class ServerPluginInterface {
     }
     this.events[event].push({ callback: callback, id: id })
   }
-
-  off(event, id) {
+  
+  #off = ("event", id) => {
     if (this.events[event] === undefined) return server.log(`Event ${event} not registered`, "warn")
     this.events[event] = this.events[event].filter(listener => listener.id !== id)
   }
