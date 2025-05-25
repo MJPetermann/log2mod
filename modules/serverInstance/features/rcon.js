@@ -1,6 +1,8 @@
 import Rcon from 'rcon';
 import { instance } from '../instance.js';
 
+
+
 export const colors = [
     { name: 'white', code: '\u0001' },          // #FFFFFF
     { name: 'lightRed', code: '\u000F' },       // #FF5555
@@ -19,7 +21,8 @@ export const colors = [
     { name: 'darkPurple', code: '\u000D' },     // #964FFF
 ];
 
-async function sendCommands(server, commands) {
+async function sendCommands(commands) {
+    const server = instance.config();
     return new Promise((resolve, reject) => {
         try {
         const connection = new Rcon(server.ip, server.port, server.rconPassword);
@@ -31,7 +34,6 @@ async function sendCommands(server, commands) {
         }).on('error', (err) => {
             console.log("error " + err);
             connection.disconnect()
-            server.active = false
             reject(err)
             
         }).on("response", (res) => {
@@ -40,14 +42,14 @@ async function sendCommands(server, commands) {
         })
         connection.connect()
         } catch (error) {
-            server.active = false
         console.error("Rcon connection error: " + error)
-        reject(err)
+        reject(error)
         }
     })
 }
 
-async function checkServer(server) {
+async function checkServer() {
+    const server = instance.config();
     return new Promise((resolve, reject) => {
         try {
             const connection = new Rcon(server.ip, server.port, server.rconPassword);
@@ -72,12 +74,12 @@ async function checkServer(server) {
     })
 }
 
-async function sendSayCommands(server, texts) {
+async function sendSayCommands(texts) {
     const editedText = []
     for (const text of texts){
         editedText.push(replaceColour("say " + text))
     }
-    sendCommands(server, editedText)
+    sendCommands(editedText)
 }
 
 function replaceColour(text){
@@ -93,5 +95,4 @@ export const rcon =
     command: sendCommands,
     say: sendSayCommands,
     status: checkServer
-    
 }

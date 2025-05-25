@@ -1,7 +1,9 @@
 import { registerListener } from "./event";
+import { instance } from "./instance";
+import { rcon } from "./features/rcon";
 
 export default class ServerPluginInterface {
-  constructor(server, plugin) {
+  constructor(serverconfig, plugin) {
     this.events = {}
     this.plugin = plugin
     this.interface = {
@@ -25,9 +27,9 @@ export default class ServerPluginInterface {
       }
     }
   }
-  
+
   #on = (event, callback, id) => {
-    if (this.events[event] == { callback: callback, id: id }) server.log(`Event ${event} already registered with id ${id}`, "warn")
+    if (this.events[event] == { callback: callback, id: id }) this.#log(`Event ${event} already registered with id ${id}`)
     if (this.events[event] === undefined) {
         this.events[event] = []
         registerListener(event, (data) => {
@@ -45,11 +47,18 @@ export default class ServerPluginInterface {
   }
 
   #message = (message) => {
+    rcon.say(message)
+  }
 
+  #rcon = async (command, callback) => {
+    if (!callback) {
+      return rcon.command(command)
+    }
+    callback(await rcon.command())
   }
 
   #log = (message) => {
-
+    instance.log(this.plugin.name + " - " + message)
   }
   #playerList = () => {
   
@@ -72,7 +81,5 @@ export default class ServerPluginInterface {
   #commandOff = (command, callback) => {
 
   }
-  #rcon = (command, callback) => {
-
-  }
+  
 }

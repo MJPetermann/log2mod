@@ -7,13 +7,9 @@ let jsonBuffer = '';
 let inJsonBlock = false;
 function handleLogs(logs) {
     console.time('handleLogs');
-    console.log("Logs: ", logs);
     for (const line of logs.split('\n')) {
         let logLine = line.slice(28);
         if (logLine.length < 1) continue;
-
-        instance.log(logLine);
-
         if (inJsonBlock) {
             if (logLine.startsWith('JSON_BEGIN')) {
                 logLine = logLine.substring('JSON_BEGIN'.length);
@@ -33,7 +29,25 @@ function handleLogs(logs) {
 
                 try {
                     const json = JSON.parse(correctedJsonString);
-                    console.log("JSON: ", json);
+                    const fields = getFields()
+                    function getFields() {
+                        let returnvalue = [];
+                        json.fields.split(',').forEach((field) => {
+                            returnvalue.push(field.replaceAll(" ", ''));
+                        })
+                        return returnvalue
+                    };
+                    
+                    for (let player in json.players) {
+                        let playerString = json.players[player];
+                        let index = 0;
+                        json.players[player] = {}
+                        playerString.split(',').forEach((playerData) => {
+                            json.players[player][fields[index]] = Number(playerData);
+                            index++;
+                        });
+                        
+                    }
                     emitEvent("json", json);
                 } catch (e) {
                     console.error('Error parsing JSON:', e);
@@ -57,7 +71,7 @@ function handleLogs(logs) {
             const match = logLine.match(event.regex);
             if (match) {
                 const data = event.format(match, getPlayer);
-                console.log(event.name, data);
+                emitEvent(event.name, data);
                 break;
             }
         }
@@ -71,7 +85,7 @@ function emitEvent(event, data) {
     //         listener(data);
     //     }
     // }
-    console.log ("Event: " + event, data);
+    console.log ("Event: " + event , data);
 }
 
 function registerListener(event, callback) {

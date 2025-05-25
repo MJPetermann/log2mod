@@ -530,7 +530,7 @@ const events = [
     // },
     {
         name: "gameOver",
-        regex: /Game Over: (\w+) (\w+) (\w+) score (\d+):(\d+) after (\d+) min/,
+        regex: /Game Over: (\w+) (\w+)? (\w+) score (\d+):(\d+) after (\d+) min/,
         data: ["", "gameMode", "subMode", "map", "ctScore", "tScore", "duration"],
         format: function (match) {
             return {
@@ -541,6 +541,32 @@ const events = [
                 tScore: parseInt(match[5], 10),
                 duration: parseInt(match[6], 10) // Ensure duration is an integer.
             };
+        }
+    },
+    {
+        name: "teamSideUpdate",
+        regex: /MatchStatus: Team playing "(CT|TERRORIST)":\s+(.+)/,
+        data: ["", "side", "teamname"],
+        format: function (match) {
+            return {
+                side: match[1],
+                teamname: match[2]
+            }
+        }
+    },
+    {
+        name: "matchScoreUpdate",
+        regex: /^MatchStatus: Score: (\d+):(\d+) on map "([^"]+)" RoundsPlayed: (-?\d+)/,
+        data: ["", "ctScore", "tScore", "map", "roundPlayed"],
+        format: function (match) {
+            return {
+                score: {
+                    ct: parseInt(match[1],10),
+                    t: parseInt(match[2],10)
+                },
+                map: match[3],
+                roundPlayed: parseInt(match[4],10)
+            }
         }
     }
 ];

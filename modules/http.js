@@ -46,7 +46,6 @@ function configureStandardRoute(serverProcessInstanceIndex) {
     console.log("Configuring Standard Route for " + serverProcesses[serverProcessInstanceIndex].cfg.name);
     serverProcesses[serverProcessInstanceIndex].route.use(express.text())
     serverProcesses[serverProcessInstanceIndex].route.post('/', async (req, res) => {
-        console.log(req.get('x-server-addr'));
         if (req.get('x-server-addr') === serverProcesses[serverProcessInstanceIndex].cfg.publicIp+ ":" + serverProcesses[serverProcessInstanceIndex].cfg.port) {
             let response = sendMessage(serverProcesses[serverProcessInstanceIndex], { type: "log", logs: req.body })
             if(!(await response)) return res.sendStatus(200);
