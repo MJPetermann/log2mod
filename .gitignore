@@ -1,1 +1,3 @@
 node_modules
+cfg/l2m.json
+cfg/serversOnStartup.json
