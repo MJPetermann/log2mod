@@ -2,6 +2,10 @@ import { httpHandler } from './http.js';
 import { handleLogs } from './event.js';
 import { rcon } from './features/rcon.js'
 import l2mConfig from '../../cfg/l2m.json' with {type: 'json'}
+import { loadPlugins } from './plugins.js';
+import { registerListener } from './event.js';
+import { handleCommand } from './features/commands.js';
+import { initPlayerList } from './features/players.js';
 
 var serverConfig
 var serverRoute = null
@@ -20,19 +24,27 @@ async function initServer(message) {
     setInterval(() => {
         process.send({ type: "hb", pid: process.pid });
     }, 1000);
-    setInterval(() => {
-        checkServerConnection()
-    }, 10000);
+    // setInterval(() => {
+    //     checkServerConnection()
+    // }, 10000);
     handleMessages();
 
-    initialConnection();
+    await initialConnection();
+
+    
+    await loadPlugins()
+    
+    initPlayerList();
+    
+    //permissions
+
+    registerListener("playerCommand", handleCommand);
 
     fLog("Server initialized!");
 }
 
 function handleMessages() {
     process.on('message', (message) => {
-        fLog("Handling message: " + message.type);
         if (message.type === "instr") {
             if (message.instr === "shutdown") {
                 process.exit();
@@ -54,8 +66,9 @@ async function initialConnection() {
     if(!(await rcon.status())) {
         process.exit();
     }
-    serverConfig.publicIp = ((await rcon.status(serverConfig)).match(/udp\/ip\s*:\s*\d+\.\d+\.\d+\.\d+:\d+\s*\(public\s+(\d+\.\d+\.\d+\.\d+):\d+\)/)[1])
-    rcon.command(["log on","mp_logdetail 3","mp_logmoney 1","mp_logdetail_items 1","logaddress_add_http \"http://"+l2mConfig.ip+":"+l2mConfig.port+"/"+ serverConfig.name +"/\"", "mp_restartgame 1"]);
+    if(!serverConfig.publicIp) serverConfig.publicIp = ((await rcon.status(serverConfig)).match(/udp\/ip\s*:\s*\d+\.\d+\.\d+\.\d+:\d+\s*\(public\s+(\d+\.\d+\.\d+\.\d+):\d+\)/)[1])
+    
+    rcon.command(["log on","mp_logdetail 3","mp_logmoney 1","mp_logdetail_items 1","logaddress_add_http \"http://"+l2mConfig.ip+":"+l2mConfig.port+"/"+ serverConfig.name +"/\""]);
     process.send({ type: "publicIp", publicIp: serverConfig.publicIp });
 }
     

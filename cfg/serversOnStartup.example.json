@@ -1,0 +1,25 @@
+{
+    "servers": [
+        {
+            "name": "example",
+            "ip": "172.0.0.1",
+            "publicIp": "123.456.789.012",
+            "port": "27015",
+            "rconPassword": "secure-rcon-password",
+            "config": {
+                "plugins": [
+                    "defaultPlugin"
+                ],
+                "permissionGroups": {
+                    "default": {
+                        "permissions":["basic.*"]
+                    },
+                    "admin": {
+                        "permissions":["*"],
+                        "players": ["[U:1:395318202]"]
+                    }
+                }
+            }
+        }
+    ]
+}

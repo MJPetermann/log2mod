@@ -2,16 +2,16 @@ const events = [
     {
         name: "playerCommand",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" say(_team)? "(?:[!.\/])(.*)"/,
-        data: ["", "name", "playerId", "steamId3", "side", "chatType", "command", "arguments"],
-        format: function (match, getPlayer) {
+        data: ["", "name", "playerid", "steamid", "side", "chatType", "command", "arguments"],
+        format: function (match, conversion) {
             const playerdata = {
                 name: match[1],
-                playerId: parseInt(match[2], 10),
-                steamId3:  match[3],
+                playerid: parseInt(match[2], 10),
+                steamid:  match[3],
                 side: match[4]
             }
             return {
-                player: getPlayer(playerdata),
+                player: conversion.player(playerdata),
                 isTeamChat: (match[5] == "_team"),
                 command: match[6].split(" ")[0],
                 arguments: match[6].split(" ").slice(1)
@@ -98,12 +98,12 @@ const events = [
     {
         name: "playerConnected",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><>" connected, address "(.*)"/,
-        data: ["", "name", "playerId", "steamId3", "address"],
+        data: ["", "name", "playerid", "steamid", "address"],
         format: function (match) {
             return {
                 name: match[1],
-                playerId: parseInt(match[2],10),
-                steamId3: match[3],
+                playerid: parseInt(match[2],10),
+                steamid: match[3],
                 address: match[4]
             };
         }
@@ -111,16 +111,16 @@ const events = [
     {
         name: "playerDisconnected",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT|Unassigned|)>" disconnected \(reason "(.+)"\)/,
-        data: ["", "name", "playerId", "steamId3", "side", "reason"],
-        format: function (match, getPlayer) {
+        data: ["", "name", "playerid", "steamid", "side", "reason"],
+        format: function (match, conversion) {
              const playerdata = {
                 name: match[1],
-                playerId: parseInt(match[2],10),
-                steamId3:  match[3],
+                playerid: parseInt(match[2],10),
+                steamid:  match[3],
                 side: match[4]
             }
             return {
-                player: getPlayer(playerdata),
+                player: conversion.player(playerdata),
                 reason: match[5]
             };
         }
@@ -128,24 +128,24 @@ const events = [
     {
         name: "playerEntered",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><>" entered the game/,
-        data: ["", "name", "playerId", "steamId3"],
+        data: ["", "name", "playerid", "steamid"],
         format: function (match) {
              return {
                 name: match[1],
-                playerId: parseInt(match[2],10),
-                steamId3: match[3]
+                playerid: parseInt(match[2],10),
+                steamid: match[3]
             };
         }
     },
     {
         name: "playerBanned",
         regex: /Banid: "(.+)<(\d+)><(\[U:\d+:\d+])><\w*>" was banned "([\w. ]+)" by "(\w+)"/,
-        data: ["", "name", "playerId", "steamId3", "duration", "banner"],
+        data: ["", "name", "playerid", "steamid", "duration", "banner"],
         format: function(match){
             return {
                 name: match[1],
-                playerId: parseInt(match[2], 10),
-                steamId3: match[3],
+                playerid: parseInt(match[2], 10),
+                steamid: match[3],
                 duration: match[4],
                 banner: match[5]
             };
@@ -155,16 +155,16 @@ const events = [
     {
         name: "playerSwitch",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])>" switched from team <(Unassigned|Spectator|TERRORIST|CT)> to <(Unassigned|Spectator|TERRORIST|CT)>/,
-        data: ["", "name", "playerId", "steamId3", "oldSide", "newSide"],
-        format: async function (match, getPlayer) {
+        data: ["", "name", "playerid", "steamid", "oldSide", "newSide"],
+        format: function (match, conversion) {
             const playerdata = {
                 name: match[1],
-                playerId: parseInt(match[2],10),
-                steamId3:  match[3],
+                playerid: parseInt(match[2],10),
+                steamid:  match[3],
                 side: match[5]
             }
             return {
-                player: getPlayer(playerdata),
+                player: conversion.player(playerdata),
                 oldSide: match[4]
             };
         }
@@ -172,16 +172,16 @@ const events = [
     {
         name: "playerSay",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" say(_team)? "(.*)"/,
-        data: ["", "name", "playerId", "steamId3", "side", "chatType", "text"],
-        format: function (match, getPlayer) {
+        data: ["", "name", "playerid", "steamid", "side", "chatType", "text"],
+        format: function (match, conversion) {
             const playerdata = {
                 name: match[1],
-                playerId: parseInt(match[2],10),
-                steamId3:  match[3],
+                playerid: parseInt(match[2],10),
+                steamid:  match[3],
                 side: match[4]
             }
             return {
-                player: getPlayer(playerdata),
+                player: conversion.player(playerdata),
                 isTeamChat: (match[5] == "_team"),
                 text: match[6]
             };
@@ -190,16 +190,16 @@ const events = [
     {
         name: "playerPurchase",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" purchased "(\w+)"/,
-        data: ["", "name", "playerId", "steamId3", "side", "weapon"],
-        format: function (match, getPlayer) {
+        data: ["", "name", "playerid", "steamid", "side", "weapon"],
+        format: function (match, conversion) {
             const playerdata = {
                 name: match[1],
-                playerId: parseInt(match[2],10),
-                steamId3:  match[3],
+                playerid: parseInt(match[2],10),
+                steamid:  match[3],
                 side: match[4]
             }
             return {
-                player: getPlayer(playerdata),
+                player: conversion.player(playerdata),
                 weapon: match[5]
             };
         }
@@ -207,23 +207,23 @@ const events = [
     // {
     //     name: "playerKill",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" \[(-?\d+) (-?\d+) (-?\d+)\] killed "(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" \[(-?\d+) (-?\d+) (-?\d+)\] with "(\w+)" ?(\(?(headshot|penetrated|headshot penetrated)?\))?/,
-    //     data: ["", "attackerName", "attackerPlayerId", "attackerSteamId3", "attackerSide", "attackerPosX", "attackerPosY", "attackerPosZ", "victimName", "victimPlayerId", "victimSteamId3", "victimSide", "victimPosX", "victimPosY", "victimPosZ", "weapon", "damageType"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "attackerName", "attackerplayerid", "attackersteamid", "attackerSide", "attackerPosX", "attackerPosY", "attackerPosZ", "victimName", "victimplayerid", "victimsteamid", "victimSide", "victimPosX", "victimPosY", "victimPosZ", "weapon", "damageType"],
+    //     format: function (match) {
     //         const attackerData = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         const victimData = {
     //             name: match[8],
-    //             playerId: parseInt(match[9],10),
-    //             steamId3:  match[10],
+    //             playerid: parseInt(match[9],10),
+    //             steamid:  match[10],
     //             side: match[11]
     //         }
     //         return {
-    //             attacker: getPlayer(attackerData),
-    //             victim: getPlayer(victimData),
+    //             attacker: attackerData,
+    //             victim: victimData,
     //             attackerPosX: parseInt(match[5], 10),
     //             attackerPosY: parseInt(match[6], 10),
     //             attackerPosZ: parseInt(match[7], 10),
@@ -238,46 +238,46 @@ const events = [
     // {
     //     name: "playerKillAssist",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" assisted killing "(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>"/,
-    //     data: ["", "attackerName", "attackerPlayerId", "attackerSteamId3", "attackerSide", "victimName", "victimPlayerId", "victimSteamId3", "victimSide"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "attackerName", "attackerplayerid", "attackersteamid", "attackerSide", "victimName", "victimplayerid", "victimsteamid", "victimSide"],
+    //     format: function (match) {
     //         const attackerData = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         const victimData = {
     //             name: match[5],
-    //             playerId: parseInt(match[6],10),
-    //             steamId3:  match[7],
+    //             playerid: parseInt(match[6],10),
+    //             steamid:  match[7],
     //             side: match[8]
     //         }
     //         return {
-    //             attacker: getPlayer(attackerData),
-    //             victim: getPlayer(victimData)
+    //             attacker: attackerData,
+    //             victim: victimData
     //         };
     //     }
     // },
     // {
     //     name: "playerAttack",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" \[(-?\d+) (-?\d+) (-?\d+)\] attacked "(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" \[(-?\d+) (-?\d+) (-?\d+)\] with "(\w+)" \(damage "(\d+)"\) \(damage_armor "(\d+)"\) \(health "(\d+)"\) \(armor "(\d+)"\) \(hitgroup "([\w ]+)"\)/,
-    //     data: ["", "attackerName", "attackerPlayerId", "attackerSteamId3", "attackerSide", "attackerPosX", "attackerPosY", "attackerPosZ", "victimName", "victimPlayerId", "victimSteamId3", "victimSide", "victimPosX", "victimPosY", "victimPosZ", "weapon", "damage", "damageArmor", "health", "armor", "hitgroup"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "attackerName", "attackerplayerid", "attackersteamid", "attackerSide", "attackerPosX", "attackerPosY", "attackerPosZ", "victimName", "victimplayerid", "victimsteamid", "victimSide", "victimPosX", "victimPosY", "victimPosZ", "weapon", "damage", "damageArmor", "health", "armor", "hitgroup"],
+    //     format: function (match) {
     //         const attackerData = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         const victimData = {
     //             name: match[8],
-    //             playerId: parseInt(match[9],10),
-    //             steamId3:  match[10],
+    //             playerid: parseInt(match[9],10),
+    //             steamid:  match[10],
     //             side: match[11]
     //         }
     //         return {
-    //             attacker: getPlayer(attackerData),
-    //             victim: getPlayer(victimData),
+    //             attacker: attackerData,
+    //             victim: victimData,
     //             attackerPosX: parseInt(match[5], 10),
     //             attackerPosY: parseInt(match[6], 10),
     //             attackerPosZ: parseInt(match[7], 10),
@@ -296,16 +296,16 @@ const events = [
     // {
     //     name: "playerKilledByBomb",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" \[(-?\d+) (-?\d+) (-?\d+)\] was killed by the bomb\./,
-    //     data: ["", "playerName", "playerId", "steamId3", "side", "posX", "posY", "posZ"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "playerName", "playerid", "steamid", "side", "posX", "posY", "posZ"],
+    //     format: function (match) {
     //         const playerdata = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             player: getPlayer(playerdata),
+    //             player: playerdata,
     //             posX: parseInt(match[5], 10),
     //             posY: parseInt(match[6], 10),
     //             posZ: parseInt(match[7], 10)
@@ -315,16 +315,16 @@ const events = [
     // {
     //     name: "playerKilledSuicide",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" \[(-?\d+) (-?\d+) (-?\d+)\] committed suicide with "(.*)"/,
-    //     data: ["", "playerName", "playerId", "steamId3", "side", "posX", "posY", "posZ", "weapon"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "playerName", "playerid", "steamid", "side", "posX", "posY", "posZ", "weapon"],
+    //     format: function (match) {
     //          const playerdata = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             player: getPlayer(playerdata),
+    //             player: playerdata,
     //             posX: parseInt(match[5], 10),
     //             posY: parseInt(match[6], 10),
     //             posZ: parseInt(match[7], 10),
@@ -335,16 +335,16 @@ const events = [
     {
         name: "playerPickedUp",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" picked up "(\w+)"/,
-        data: ["", "name", "playerId", "steamId3", "side", "weapon"],
-        format: function (match, getPlayer) {
+        data: ["", "name", "playerid", "steamid", "side", "weapon"],
+        format: function (match, conversion) {
             const playerdata = {
                 name: match[1],
-                playerId: parseInt(match[2],10),
-                steamId3:  match[3],
+                playerid: parseInt(match[2],10),
+                steamid:  match[3],
                 side: match[4]
             }
             return {
-                player: getPlayer(playerdata),
+                player: conversion.player(playerdata),
                 weapon: match[5]
             };
         }
@@ -352,16 +352,16 @@ const events = [
     {
         name: "playerDropped",
         regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT|Unassigned)>" dropped "(\w+)"/,
-        data: ["", "name", "playerId", "steamId3", "side", "weapon"],
-        format: function (match, getPlayer) {
+        data: ["", "name", "playerid", "steamid", "side", "weapon"],
+        format: function (match, conversion) {
             const playerdata = {
                 name: match[1],
-                playerId: parseInt(match[2],10),
-                steamId3:  match[3],
+                playerid: parseInt(match[2],10),
+                steamid:  match[3],
                 side: match[4]
             }
             return {
-                player: getPlayer(playerdata),
+                player: conversion.player(playerdata),
                 weapon: match[5]
             };
         }
@@ -369,16 +369,16 @@ const events = [
     // {
     //     name: "playerMoneyChange",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" money change (\d+)\+?(-?\d+) = \$(\d+) \(tracked\)( \(purchase: (\w+)\))?/,
-    //     data: ["", "name", "playerId", "steamId3", "side", "initialMoney", "moneyChange", "newMoney", "purchase"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "name", "playerid", "steamid", "side", "initialMoney", "moneyChange", "newMoney", "purchase"],
+    //     format: function (match) {
     //         const playerdata = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             player: getPlayer(playerdata),
+    //             player: playerdata,
     //             initialMoney: parseInt(match[5], 10),
     //             moneyChange: parseInt(match[6], 10),
     //             newMoney: parseInt(match[7], 10),
@@ -389,64 +389,64 @@ const events = [
     // {
     //     name: "playerBombGot",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" triggered "Got_The_Bomb"/,
-    //     data: ["", "name", "playerId", "steamId3", "side"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "name", "playerid", "steamid", "side"],
+    //     format: function (match) {
     //         const playerdata = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             player: getPlayer(playerdata)
+    //             player: playerdata
     //         };
     //     }
     // },
     // {
     //     name: "playerBombPlanted",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" triggered "Planted_The_Bomb"/,
-    //     data: ["", "name", "playerId", "steamId3", "side"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "name", "playerid", "steamid", "side"],
+    //     format: function (match) {
     //          const playerdata = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             player: getPlayer(playerdata)
+    //             player: playerdata
     //         };
     //     }
     // },
     // {
     //     name: "playerBombDropped",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" triggered "Dropped_The_Bomb"/,
-    //     data: ["", "name", "playerId", "steamId3", "side"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "name", "playerid", "steamid", "side"],
+    //     format: function (match) {
     //         const playerdata = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             player: getPlayer(playerdata)
+    //             player: playerdata
     //         };
     //     }
     // },
     // {
     //     name: "playerBombBeginDefuse",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" triggered "Begin_Bomb_Defuse_With(out)?_Kit"/,
-    //     data: ["", "name", "playerId", "steamId3", "side", "withKit"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "name", "playerid", "steamid", "side", "withKit"],
+    //     format: function (match) {
     //         const playerdata = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             player: getPlayer(playerdata),
+    //             player: playerdata,
     //             withKit: !match[5] // If "out" is present, withKit is false, otherwise true.
     //         };
     //     }
@@ -454,32 +454,32 @@ const events = [
     // {
     //     name: "playerBombDefused",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" triggered "Defused_The_Bomb"/,
-    //     data: ["", "name", "playerId", "steamId3", "side"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "name", "playerid", "steamid", "side"],
+    //     format: function (match) {
     //         const playerdata = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             player: getPlayer(playerdata)
+    //             player: playerdata
     //         };
     //     }
     // },
     // {
     //     name: "playerThrew",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" threw (\w+) \[(-?\d+) (-?\d+) (-?\d+)\]( flashbang entindex (\d+))?/,
-    //     data: ["", "name", "playerId", "steamId3", "side", "grenade", "posX", "posY", "posZ", "flashbangEntindex"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "name", "playerid", "steamid", "side", "grenade", "posX", "posY", "posZ", "flashbangEntindex"],
+    //     format: function (match) {
     //         const playerdata = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             player: getPlayer(playerdata),
+    //             player: playerdata,
     //             grenade: match[5],
     //             posX: parseInt(match[6], 10),
     //             posY: parseInt(match[7], 10),
@@ -491,23 +491,23 @@ const events = [
     // {
     //     name: "playerBlinded",
     //     regex: /"(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" blinded for ([\d.]+) by "(.+)<(\d+)><(\[U:\d+:\d+])><(TERRORIST|CT)>" from flashbang entindex (\d+)/,
-    //     data: ["", "victimName", "victimPlayerId", "victimSteamId3", "victimSide", "duration", "attackerName", "attackerPlayerId", "attackerSteamId3", "attackerSide", "flashbangEntindex"],
-    //     format: function (match, getPlayer) {
+    //     data: ["", "victimName", "victimplayerid", "victimsteamid", "victimSide", "duration", "attackerName", "attackerplayerid", "attackersteamid", "attackerSide", "flashbangEntindex"],
+    //     format: function (match) {
     //        const attackerData = {
     //             name: match[6],
-    //             playerId: parseInt(match[7],10),
-    //             steamId3:  match[8],
+    //             playerid: parseInt(match[7],10),
+    //             steamid:  match[8],
     //             side: match[9]
     //         }
     //         const victimData = {
     //             name: match[1],
-    //             playerId: parseInt(match[2],10),
-    //             steamId3:  match[3],
+    //             playerid: parseInt(match[2],10),
+    //             steamid:  match[3],
     //             side: match[4]
     //         }
     //         return {
-    //             attacker: getPlayer(attackerData),
-    //             victim: getPlayer(victimData),
+    //             attacker: attackerData,
+    //             victim: victimData,
     //             duration: parseFloat(match[5]), // Duration can be a floating-point number.
     //             flashbangEntindex: parseInt(match[10], 10)
     //         };

@@ -56,7 +56,29 @@ function configureStandardRoute(serverProcessInstanceIndex) {
     });
 
     serverProcesses[serverProcessInstanceIndex].route.get('/', async (req, res) => {
-        res.send(serverProcesses[serverProcessInstanceIndex].cfg);
+        res.send(serverProcesses[serverProcessInstanceIndex].status);
+    });
+
+    serverProcesses[serverProcessInstanceIndex].route.post('/*', async (req, res) => {
+        if (serverProcesses[serverProcessInstanceIndex].status !== "active") res.sendStatus(503);
+        sendMessage(serverProcesses[serverProcessInstanceIndex], { type: "http", method:"post", req: req.body }, (data)=> {
+            if (data) {
+                res.status(data.response.status).send(data.response.body);
+            } else {
+                res.sendStatus(200);
+            }
+        });
+    });
+
+    serverProcesses[serverProcessInstanceIndex].route.get('/*', async (req, res) => {
+        if (serverProcesses[serverProcessInstanceIndex].status !== "active") res.sendStatus(503);
+        sendMessage(serverProcesses[serverProcessInstanceIndex], { type: "http", method:"get", req: {body: req.body, path: req.path} }, (data)=> {
+            if (data) {
+                res.status(data.response.status).send(data.response.body);
+            } else {
+                res.sendStatus(500);
+            }
+        });
     });
 }
 

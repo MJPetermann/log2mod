@@ -1,12 +1,12 @@
-import { events } from "./eventList.js";
-import { getPlayer } from "./features/players.js";
+import { events } from "./eventlist.js";
 import { instance } from './instance.js';
+import { handleActivePlayerEvent } from "./features/players.js";
 
 const eventListeners = {};
 let jsonBuffer = '';
 let inJsonBlock = false;
 function handleLogs(logs) {
-    console.time('handleLogs');
+    // console.time('handleLogs');
     for (const line of logs.split('\n')) {
         let logLine = line.slice(28);
         if (logLine.length < 1) continue;
@@ -70,22 +70,22 @@ function handleLogs(logs) {
         for (const event of events) {
             const match = logLine.match(event.regex);
             if (match) {
-                const data = event.format(match, getPlayer);
+                const data = event.format(match, {player: handleActivePlayerEvent});
                 emitEvent(event.name, data);
                 break;
             }
         }
     }
-    console.timeEnd('handleLogs');
+    // console.timeEnd('handleLogs');
 }
 
 function emitEvent(event, data) {
-    // if (eventListeners[event]) {
-    //     for (const listener of eventListeners[event]) {
-    //         listener(data);
-    //     }
-    // }
-    console.log ("Event: " + event , data);
+    if (eventListeners[event]) {
+        for (const listener of eventListeners[event]) {
+            listener(data);
+        }
+    }
+    // console.log ("Event: " + event , data);
 }
 
 function registerListener(event, callback) {
@@ -100,4 +100,4 @@ function throwError(message, crash) {
     return "Non fatal error accoured in instanceHander.js: " + message;
 }
 
-export { handleLogs, registerListener }
+export { emitEvent, handleLogs, registerListener }

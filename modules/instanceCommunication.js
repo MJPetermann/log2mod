@@ -62,6 +62,7 @@ function messageHandler(serverProcessInstance, message) {
     }
     if (message.type === "publicIp") {
         serverProcessInstance.cfg.publicIp = message.publicIp;
+        serverProcessInstance.status = "active";
     }
 
 }

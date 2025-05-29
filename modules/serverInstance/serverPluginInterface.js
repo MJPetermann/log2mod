@@ -1,9 +1,13 @@
-import { registerListener } from "./event";
-import { instance } from "./instance";
-import { rcon } from "./features/rcon";
+import { registerListener } from "./event.js";
+import { instance } from "./instance.js";
+import { rcon } from "./features/rcon.js";
+import { onCommand, offCommand } from "./features/commands.js";
+import { players } from "./features/players.js";
+import { addRoute } from "./http.js";
+import { hasPermission } from "./features/commands.js";
 
 export default class ServerPluginInterface {
-  constructor(serverconfig, plugin) {
+  constructor(plugin) {
     this.events = {}
     this.plugin = plugin
     this.interface = {
@@ -14,8 +18,8 @@ export default class ServerPluginInterface {
       log: this.#log,
       player: {
         list: this.#playerList,
-        reload: this.#playerReload,
-        get: this.#playerGet
+        get: this.#playerGet,
+        hasPermission: this.#playerHasPermission
       },
       command: {
         on: this.#commandOn,
@@ -42,15 +46,21 @@ export default class ServerPluginInterface {
   }
   
   #off = (event, id) => {
-    if (this.events[event] === undefined) return server.log(`Event ${event} not registered`, "warn")
+    if (this.events[event] === undefined) return this.#log(`Event ${event} not registered`)
     this.events[event] = this.events[event].filter(listener => listener.id !== id)
   }
 
   #message = (message) => {
+    if (!Array.isArray(message)) {
+      message = [message]
+    }
     rcon.say(message)
   }
 
   #rcon = async (command, callback) => {
+    if (!Array.isArray(command)) {
+      command = [command]
+    }
     if (!callback) {
       return rcon.command(command)
     }
@@ -61,25 +71,38 @@ export default class ServerPluginInterface {
     instance.log(this.plugin.name + " - " + message)
   }
   #playerList = () => {
-  
+    return players.filter(player => player.active)
   }
-  #playerReload = () => {
-  
+  #playerGet = (steamid) => {
+    return players.find(player => player.steamid === steamid) || null
   }
-  #playerGet = (id) => {
-  
+  #playerHasPermission = (player, permission) => {
+    return hasPermission(permission, player.permissions)
   }
   #httpGet = (url, callback) => {
-
+    addRoute(this.plugin.name+"/"+url, "get", (req, res) => {
+      if (callback) {
+        callback(req, res);
+      } else {
+        res({ status: 200, body: "OK" });
+      }
+    });
   }
   #httpPost = (url, data, callback) => {
+    addRoute(this.plugin.name+"/"+url, "post", (req, res) => {
+      if (callback) {
+        callback(req, res);
+      } else {
+        res({ status: 200, body: "OK" });
+      }
+    });
 
   }
   #commandOn = (command, callback) => {
-
+    onCommand(command, callback)
   }
   #commandOff = (command, callback) => {
-
+    offCommand(command, callback)
   }
   
 }
