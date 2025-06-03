@@ -545,7 +545,7 @@ const events = [
     },
     {
         name: "teamSideUpdate",
-        regex: /MatchStatus: Team playing "(CT|TERRORIST)":\s+(.+)/,
+        regex: /^MatchStatus: Team playing "(CT|TERRORIST)":\s+(.+)/,
         data: ["", "side", "teamname"],
         format: function (match) {
             return {

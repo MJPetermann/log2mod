@@ -38,7 +38,7 @@ export function initPlayerList() {
         if (player) {
             player.active = false;
             emitEvent("playerChanged", {player: player, action: "disconnected"});
-            instance.log(`Player ${action}: ${player.name} (${player.steamid})`);
+            instance.log(`Player disconnected: ${player.name} (${player.steamid})`);
         }
     });
 }

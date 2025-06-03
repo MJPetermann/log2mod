@@ -1,4 +1,5 @@
 import { totalCommands } from "../modules/serverInstance/features/commands.js"
+import { colors } from "../modules/serverInstance/features/rcon.js"
 export default class defaultPlugin {
     static name = "defaultPlugin"
     static description = "This Plugin is a default plugin for the server. It contains some basic commands and features."
@@ -8,7 +9,8 @@ export default class defaultPlugin {
         { command: "ping", permission: "admin.ping", description: "Pong!" },
         { command: "list", permission: "admin.list", description: "Shows a list of all players." },
         { command: "help", permission: "basic.help", description: "Shows a list of all commands." },
-        { command: "rcon", permission: "admin.rcon", description: "Executes a rcon command." }
+        { command: "rcon", permission: "admin.rcon", description: "Executes a rcon command." },
+        { command: "colors", permission: "admin.colors", description: "Shows a list of all available colors." }
     ]
     constructor(ServerPluginInterface) {
         this.spInterface = ServerPluginInterface.interface
@@ -24,6 +26,8 @@ export default class defaultPlugin {
         this.spInterface.command.on("help", this.command_help);
 
         this.spInterface.command.on("rcon", this.command_rcon);
+
+        this.spInterface.command.on("colors", this.command_colors);
 
         this.spInterface.http.get("/", (req, res) => {
             res({ status: 200, body: "Hello from the default plugin!" });
@@ -82,4 +86,7 @@ export default class defaultPlugin {
         }
     }
 
+    command_colors = (player, args) => {
+        this.spInterface.message(["{orange}Available colors: ", ...colors.map(color => `{${color.name}}${color.name}`)]);
+    }
 }

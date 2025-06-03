@@ -93,6 +93,6 @@ function replaceColour(text){
 export const rcon =
 {
     command: sendCommands,
-    say: sendSayCommands,
+    say: (text) => setImmediate(()=>{return sendSayCommands(text)}),
     status: checkServer
 }

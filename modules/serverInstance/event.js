@@ -1,4 +1,4 @@
-import { events } from "./eventlist.js";
+import { events } from "./eventList.js";
 import { instance } from './instance.js';
 import { handleActivePlayerEvent } from "./features/players.js";
 
@@ -80,6 +80,7 @@ function handleLogs(logs) {
 }
 
 function emitEvent(event, data) {
+    instance.log(`Event: ${event}`, data);
     if (eventListeners[event]) {
         for (const listener of eventListeners[event]) {
             listener(data);
